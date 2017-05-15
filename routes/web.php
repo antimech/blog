@@ -14,3 +14,10 @@
 Route::get('/', function () {
     return view('welcome');
 });
+Route::get('/blog', 'Posts\WebController@index')->name('blog.index');
+Route::get('/blog/{post}', 'Posts\WebController@show')->name('blog.show');
+
+Auth::routes();
+
+Route::get('/home', 'HomeController@index')->name('home');
+Route::resource('/home/posts', 'Posts\UserController');
