@@ -1,58 +1,59 @@
-@extends('layouts.app')
+<x-app-layout>
+    <x-slot name="header">
+        <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
+            {{ $post->title }}
+        </h2>
+    </x-slot>
 
-@section('content')
-<div class="container">
-    <div class="row">
-        <div class="col-md-8">
-            <h1>{{ $post->title }}</h1>
-            <p>Created At: {{ date('M j, Y h:ia', strtotime($post->created_at)) }}</p>
-            <p class="lead">{{ $post->body }}</p>
-        </div>
-
-        <div class="col-md-4">
-            <div class="well">
-                <dl class="dl-horizontal">
-                    <label>Url:</label>
-                    <p><a href="{{ route('blog.show', $post->id) }}">{{ route('blog.show', $post->id) }}</a></p>
-                </dl>
-
-                <dl class="dl-horizontal">
-                    <label>Created At:</label>
-                    <p>{{ date('M j, Y h:ia', strtotime($post->created_at)) }}</p>
-                </dl>
-
-                <dl class="dl-horizontal">
-                    <label>Last Updated:</label>
-                    <p>{{ date('M j, Y h:ia', strtotime($post->updated_at)) }}</p>
-                </dl>
-                <hr>
-                <div class="row">
-                    <div class="col-sm-6">
-                        <a href="{{ route('posts.edit', $post->id) }}" class="btn btn-primary btn-block">Edit</a>
-                    </div>
-                    <div class="col-sm-6">
-                        <form class="form-horizontal" role="form" method="POST" action="{{ route('posts.destroy', $post->id) }}">
-                            {{ csrf_field() }}
-                            {{ method_field('DELETE') }}
-
-                            <div class="form-group">
-                                <div class="col-md-8 col-md-offset-4">
-                                    <button type="submit" class="btn btn-danger btn-block">
-                                        Delete
-                                    </button>
-                                </div>
-                            </div>
-                        </form>
-                    </div>
+    <div class="py-12">
+        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
+            <div class="p-4 sm:p-8 bg-white dark:bg-gray-800 shadow sm:rounded-lg">
+                <div>
+                    <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">
+                        {{ $post->body }}
+                    </p>
+                    <p class="mt-4 text-gray-600 dark:text-gray-400">
+                        {{ __('Created At') }}: {{ date('M j, Y h:ia', strtotime($post->created_at)) }}
+                    </p>
+                    <p class="text-gray-600 dark:text-gray-400">
+                        {{ __('Last Updated') }}: {{ date('M j, Y h:ia', strtotime($post->updated_at)) }}
+                    </p>
                 </div>
 
-                <div class="row">
-                    <div class="col-md-12">
-                        <a href="{{ route('posts.index') }}" class="btn btn-default btn-block btn-h1-spacing"><< See All Posts</a>
-                    </div>
-                </div>
+                <a href="{{ route('posts.edit', $post->id) }}" class="inline-flex items-center px-4 py-2 bg-blue-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-blue-500 active:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800 transition ease-in-out duration-150">
+                    {{ __('Edit') }}
+                </a>
+
+                <x-danger-button
+                    x-data=""
+                    x-on:click.prevent="$dispatch('open-modal', 'confirm-post-deletion')"
+                >{{ __('Delete') }}</x-danger-button>
+
+                <x-modal name="confirm-post-deletion" :show="$errors->userDeletion->isNotEmpty()" focusable>
+                    <form method="post" action="{{ route('posts.destroy', $post) }}" class="p-6">
+                        @csrf
+                        @method('delete')
+
+                        <h2 class="text-lg font-medium text-gray-900 dark:text-gray-100">
+                            {{ __('Are you sure you want to delete this post?') }}
+                        </h2>
+
+                        <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">
+                            {{ __('Once this post is deleted, all of its resources and data will be permanently deleted.') }}
+                        </p>
+
+                        <div class="mt-6 flex justify-end">
+                            <x-secondary-button x-on:click="$dispatch('close')">
+                                {{ __('Cancel') }}
+                            </x-secondary-button>
+
+                            <x-danger-button class="ml-3">
+                                {{ __('Delete Post') }}
+                            </x-danger-button>
+                        </div>
+                    </form>
+                </x-modal>
             </div>
         </div>
     </div>
-</div>
-@endsection
+</x-app-layout>

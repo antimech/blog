@@ -1,55 +1,42 @@
-@extends('layouts.app')
+<x-app-layout>
+    <x-slot name="header">
+        <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
+            {{ __('Create New Post') }}
+        </h2>
+    </x-slot>
 
-@section('content')
-<div class="container">
-    <div class="row">
-        <div class="col-md-8 col-md-offset-2">
-            <div class="panel panel-default">
-                <div class="panel-heading">Create New Post</div>
+    <div class="py-12">
+        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
+            <div class="p-4 sm:p-8 bg-white dark:bg-gray-800 shadow sm:rounded-lg">
+                <div class="max-w-xl">
+                    <section>
+                        <form method="post" action="{{ route('posts.store') }}" class="mt-6 space-y-6">
+                            @csrf
 
-                <div class="panel-body">
-                    <form class="form-horizontal" role="form" method="POST" action="{{ route('posts.store') }}">
-                        {{ csrf_field() }}
-
-                        <div class="form-group{{ $errors->has('title') ? ' has-error' : '' }}">
-                            <label for="title" class="col-md-4 control-label">Title</label>
-
-                            <div class="col-md-6">
-                                <input id="title" type="text" class="form-control" name="title" value="{{ old('title') }}" required autofocus>
-
-                                @if ($errors->has('title'))
-                                    <span class="help-block">
-                                        <strong>{{ $errors->first('title') }}</strong>
-                                    </span>
-                                @endif
+                            <div>
+                                <x-input-label for="title" :value="__('Title')" />
+                                <x-text-input id="title" name="title" type="text" class="mt-1 block w-full" :value="old('title')" required autofocus />
+                                <x-input-error class="mt-2" :messages="$errors->get('title')" />
                             </div>
-                        </div>
 
-                        <div class="form-group{{ $errors->has('body') ? ' has-error' : '' }}">
-                            <label for="body" class="col-md-4 control-label">Body</label>
-
-                            <div class="col-md-6">
-                                <textarea id="body" class="form-control" name="body" required>{{ old('body') }}</textarea>
-
-                                @if ($errors->has('body'))
-                                    <span class="help-block">
-                                        <strong>{{ $errors->first('body') }}</strong>
-                                    </span>
-                                @endif
+                            <div>
+                                <x-input-label for="body" :value="__('Body')" />
+                                <textarea
+                                    id="body"
+                                    name="body"
+                                    class="mt-1 block w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm"
+                                    required
+                                >{{ old('body') }}</textarea>
+                                <x-input-error class="mt-2" :messages="$errors->get('body')" />
                             </div>
-                        </div>
 
-                        <div class="form-group">
-                            <div class="col-md-8 col-md-offset-4">
-                                <button type="submit" class="btn btn-primary">
-                                    Create Post
-                                </button>
+                            <div class="flex items-center gap-4">
+                                <x-primary-button>{{ __('Create Post') }}</x-primary-button>
                             </div>
-                        </div>
-                    </form>
+                        </form>
+                    </section>
                 </div>
             </div>
         </div>
     </div>
-</div>
-@endsection
+</x-app-layout>
