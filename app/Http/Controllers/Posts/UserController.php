@@ -43,7 +43,7 @@ class UserController extends Controller
         $post->body = $request->body;
         $post->save();
 
-        return redirect()->route('posts.show', $post->id);
+        return redirect()->route('posts.show', $post);
     }
 
     /**
@@ -80,7 +80,7 @@ class UserController extends Controller
         $post->body = $request->body;
         $post->save();
 
-        return redirect()->route('posts.show', $post->id);
+        return redirect()->route('posts.show', $post);
     }
 
     /**

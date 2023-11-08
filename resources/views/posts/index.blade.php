@@ -36,7 +36,7 @@
                                             {{ date('M j, Y', strtotime($post->created_at)) }}
                                         </td>
                                         <td class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                            <a href="{{ route('posts.show', $post->id) }}" class="btn btn-default btn-sm">
+                                            <a href="{{ route('posts.show', $post) }}" class="btn btn-default btn-sm">
                                                 View
                                             </a>
                                         </td>
