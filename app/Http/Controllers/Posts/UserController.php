@@ -16,7 +16,7 @@ class UserController extends Controller
     public function index(): View
     {
         return view('posts.index', [
-            'posts' => Post::orderBy('id', 'desc')->paginate(10)
+            'posts' => request()->user()->posts()->orderBy('id', 'desc')->paginate(10)
         ]);
     }
 
@@ -58,9 +58,13 @@ class UserController extends Controller
 
     /**
      * Show the form for editing the specified resource.
+     *
+     * @throws \Illuminate\Auth\Access\AuthorizationException
      */
     public function edit(Post $post): View
     {
+        $this->authorize('update', $post);
+
         return view('posts.edit', [
             'post' => $post
         ]);
@@ -68,9 +72,13 @@ class UserController extends Controller
 
     /**
      * Update the specified resource in storage.
+     *
+     * @throws \Illuminate\Auth\Access\AuthorizationException
      */
     public function update(Request $request, Post $post): RedirectResponse
     {
+        $this->authorize('update', $post);
+
         $this->validate($request, [
             'title' => 'required|string|max:255',
             'body' => 'required|string'
@@ -85,9 +93,13 @@ class UserController extends Controller
 
     /**
      * Remove the specified resource from storage.
+     *
+     * @throws \Illuminate\Auth\Access\AuthorizationException
      */
     public function destroy(Post $post): RedirectResponse
     {
+        $this->authorize('forceDelete', $post);
+
         $post->delete();
 
         return redirect()->route('posts.index');
