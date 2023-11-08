@@ -11,6 +11,14 @@ use Illuminate\View\View;
 class UserController extends Controller
 {
     /**
+     * Create the controller instance.
+     */
+    public function __construct()
+    {
+        $this->authorizeResource(Post::class, 'post');
+    }
+
+    /**
      * Display a listing of the resource.
      */
     public function index(): View
@@ -58,13 +66,9 @@ class UserController extends Controller
 
     /**
      * Show the form for editing the specified resource.
-     *
-     * @throws \Illuminate\Auth\Access\AuthorizationException
      */
     public function edit(Post $post): View
     {
-        $this->authorize('update', $post);
-
         return view('posts.edit', [
             'post' => $post
         ]);
@@ -72,13 +76,9 @@ class UserController extends Controller
 
     /**
      * Update the specified resource in storage.
-     *
-     * @throws \Illuminate\Auth\Access\AuthorizationException
      */
     public function update(Request $request, Post $post): RedirectResponse
     {
-        $this->authorize('update', $post);
-
         $this->validate($request, [
             'title' => 'required|string|max:255',
             'body' => 'required|string'
@@ -93,13 +93,9 @@ class UserController extends Controller
 
     /**
      * Remove the specified resource from storage.
-     *
-     * @throws \Illuminate\Auth\Access\AuthorizationException
      */
     public function destroy(Post $post): RedirectResponse
     {
-        $this->authorize('forceDelete', $post);
-
         $post->delete();
 
         return redirect()->route('posts.index');
