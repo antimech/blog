@@ -47,6 +47,7 @@ class UserController extends Controller
         ]);
 
         $post = new Post;
+        $post->user_id = $request->user()->id;
         $post->title = $request->title;
         $post->body = $request->body;
         $post->save();
